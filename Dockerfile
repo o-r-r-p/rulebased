@@ -1,0 +1,27 @@
+FROM ubuntu
+# update
+RUN apt-get -y update && apt-get install -y \
+sudo \
+wget \
+vim
+
+# install anaconda3
+WORKDIR /opt
+
+# download anaconda3 package and install anaconda
+RUN wget https://repo.anaconda.com/archive/Anaconda3-2021.04-Linux-x86_64.sh && \
+sh /opt/Anaconda3-2021.04-Linux-x86_64.sh -b -p /opt/anaconda3 && \
+rm -f Anaconda3-2021.04-Linux-x86_64.sh
+
+# set path
+ENV PATH /opt/anaconda3/bin:$PATH
+
+RUN pip install --upgrade pip
+
+WORKDIR /
+RUN mkdir /work
+
+EXPOSE 8888
+
+# execute jupyterlab as a defalut command
+CMD ["jupyter", "lab", "--ip=0.0.0.0", "--allow-root", "--LabApp.token=''"]
